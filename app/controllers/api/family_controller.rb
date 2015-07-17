@@ -61,11 +61,7 @@ class Api::FamilyController < ApplicationController
   end
 
   def get_family
-    if params[:id]
-      Family.find(params[:id])
-    elsif params[:name]
-      Family.find_by(params[:name])
-    end
+    Family.find_by(name: params[:id])
   end
 
 end
