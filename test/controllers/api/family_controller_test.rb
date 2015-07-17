@@ -35,7 +35,7 @@ class Api::FamilyControllerTest < ActionController::TestCase
   end
 
   test 'GET #show renders correct data' do
-    get :show, id: @family, format: :json
+    get :show, id: @family.name, format: :json
     assert_response 200
     r = JSON.parse(response.body, symbolize_names: true)
     ['id', 'name', 'phone_number', 'address', 'picture'].each do |item|
@@ -44,7 +44,7 @@ class Api::FamilyControllerTest < ActionController::TestCase
   end
 
   test 'GET #show returns correct data when passed :name' do
-    get :show, name: @family.name, format: :json
+    get :show, id: @family.name, format: :json
     assert_response 200
     r = JSON.parse(response.body, symbolize_names: true)
     ['id', 'name', 'phone_number', 'address', 'picture'].each do |item|
@@ -86,7 +86,7 @@ class Api::FamilyControllerTest < ActionController::TestCase
 
 
   test 'PATCH #update works with valid attributes' do
-    patch :update, id: @family, family: @f_attr, format: :json
+    patch :update, id: @family.name, family: @f_attr, format: :json
     assert_response 200
     @family.reload
     r = JSON.parse(response.body, symbolize_names: true)
@@ -97,7 +97,7 @@ class Api::FamilyControllerTest < ActionController::TestCase
 
   test 'PATCH #update does not work with INvalid attributes' do
     attributes = { name: '', phone_number: '', address: '' }
-    patch :update, id: @family, family: attributes, format: :json
+    patch :update, id: @family.name, family: attributes, format: :json
     assert_response 422
     @family.reload
     r = JSON.parse(response.body, symbolize_names: true)
@@ -108,7 +108,7 @@ class Api::FamilyControllerTest < ActionController::TestCase
 
   test 'DELETE #destroy obliterates family object' do
     assert_difference('Family.count', -1) do
-      delete :destroy, id: @family, format: :json
+      delete :destroy, id: @family.name, format: :json
     end
     assert_response 204
     begin
