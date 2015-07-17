@@ -43,6 +43,15 @@ class Api::FamilyControllerTest < ActionController::TestCase
     end
   end
 
+  test 'GET #show returns correct data when passed :name' do
+    get :show, name: @family.name, format: :json
+    assert_response 200
+    r = JSON.parse(response.body, symbolize_names: true)
+    ['id', 'name', 'phone_number', 'address', 'picture'].each do |item|
+      assert_equal @family.send(item), r[item.to_sym]
+    end
+  end
+
   test 'POST #create builds family record with valid attributes' do
     assert_difference('Family.count', 1) do
       post :create, family: @f_attr, format: :json
