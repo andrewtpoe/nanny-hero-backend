@@ -16,7 +16,6 @@ class Api::FamilyController < ApplicationController
   end
 
   def create
-    binding.pry
     @family = Family.new(family_params)
     respond_to do |format|
       if @family.save
