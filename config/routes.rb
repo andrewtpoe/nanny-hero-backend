@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     resources :family
+    resources :child
   end
 
 end

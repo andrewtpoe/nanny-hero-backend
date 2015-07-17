@@ -1,5 +1,6 @@
 class Api::FamilyController < ApplicationController
 
+
   def index
     @families = Family.all
     respond_to do |format|
@@ -23,6 +24,13 @@ class Api::FamilyController < ApplicationController
         format.json { render json: @family.errors, status: :unprocessable_entity }
       end
     end
+
+    children = params[:family][:children]
+
+#    binding.pry
+    # needs to iterate over array of children in params and build children objects
+    # needs to add record to family_nanny that associates nanny name with family_id
+
   end
 
   def update

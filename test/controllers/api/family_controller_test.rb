@@ -3,6 +3,26 @@ require 'test_helper'
 class Api::FamilyControllerTest < ActionController::TestCase
   def setup
     @family = families(:one)
+    @f_attr = {
+      name: "unique family name",
+      phone_number: "888-888-8888",
+      address: "family's address",
+      picture: "link to picture",
+      nanny: "Nancy",
+      children: [
+        {
+          name: "Tommy",
+          age: 10,
+          allergies: "none",
+          fav_food: "Mac 'n Cheese",
+          interests: "Child interests",
+          bed_time: "9pm",
+          potty_trained: "true",
+          special_needs: "false"
+        }
+      ]
+    }
+
   end
 
   test 'GET #index' do
@@ -23,15 +43,14 @@ class Api::FamilyControllerTest < ActionController::TestCase
     end
   end
 
-  test 'POST #create works with valid attributes' do
-    attributes = { name: 'test_name', phone_number: 'test_phone_number', address: 'test_address' }
+  test 'POST #create builds family record with valid attributes' do
     assert_difference('Family.count', 1) do
-      post :create, family: attributes, format: :json
+      post :create, family: @f_attr, format: :json
     end
     assert_response 201
   end
 
-  test 'POST #create does not work with invalid attributes' do
+  test 'POST #create does not build family record with invalid attributes' do
     attributes = { name: '', phone_number: '', address: '' }
     assert_no_difference('Family.count') do
       post :create, family: attributes, format: :json
@@ -39,9 +58,26 @@ class Api::FamilyControllerTest < ActionController::TestCase
     assert_response 422
   end
 
+
+
+
+  test 'POST #create creates the correct number of child records with valid attributes' do
+  end
+
+  test 'POST #create does not create child records with INvalid attributes' do
+  end
+
+  test 'POST #create creates nancy record associated with family' do
+  end
+
+  test 'POST #create does not work without nancy name' do
+  end
+
+
+
+
   test 'PATCH #update works with valid attributes' do
-    attributes = { name: 'test_name', phone_number: 'test_phone_number', address: 'test_address' }
-    patch :update, id: @family, family: attributes, format: :json
+    patch :update, id: @family, family: @f_attr, format: :json
     assert_response 200
     @family.reload
     r = JSON.parse(response.body, symbolize_names: true)
