@@ -1,0 +1,21 @@
+one:
+  name: MyString
+  age: MyString
+  allergies: MyString
+  fav_food: MyString
+  interests: MyString
+  bed_time: MyString
+  potty_trained: MyString
+  special_needs: MyString
+  family_id: 1
+
+two:
+  name: MyString
+  age: MyString
+  allergies: MyString
+  fav_food: MyString
+  interests: MyString
+  bed_time: MyString
+  potty_trained: MyString
+  special_needs: MyString
+  family_id: 1
