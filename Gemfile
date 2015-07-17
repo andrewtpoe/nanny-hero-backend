@@ -44,4 +44,8 @@ group :development, :test do
   gem 'spring'
 
   gem 'pry'
+
+  group :production do
+    gem 'rails_12factor'
+  end
 end

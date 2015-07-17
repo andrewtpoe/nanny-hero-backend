@@ -1,6 +1,5 @@
 class Api::FamilyController < ApplicationController
 
-
   def index
     @families = Family.all
     respond_to do |format|
