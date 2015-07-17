@@ -10,7 +10,11 @@ class Api::FamilyController < ApplicationController
   def show
     @family = get_family
     respond_to do |format|
-      format.json { render json: @family }
+      if @family
+        format.json { render json: @family }
+      else
+        format.json { render json: @family.errors }
+      end
     end
   end
 
@@ -57,7 +61,11 @@ class Api::FamilyController < ApplicationController
   end
 
   def get_family
-    Family.find(params[:id])
+    if params[:id]
+      Family.find(params[:id])
+    elsif params[:name]
+      Family.find_by(params[:name])
+    end
   end
 
 end
