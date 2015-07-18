@@ -5,7 +5,7 @@ class Api::NannyControllerTest < ActionController::TestCase
     @family = families(:poes)
     @nanny = nannies(:nancy)
     @n_attr = {
-      name: "Nancy"
+      name: "George"
     }
   end
 

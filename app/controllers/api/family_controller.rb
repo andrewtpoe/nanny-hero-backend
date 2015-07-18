@@ -13,7 +13,7 @@ class Api::FamilyController < ApplicationController
       if @family
         format.json { render json: @family }
       else
-        format.json { render json: "", status: :unprocessable_entity }
+        format.json { render json: "", status: 404 }
       end
     end
   end
@@ -43,7 +43,10 @@ class Api::FamilyController < ApplicationController
         valid << false
       end
       if params[:family][:nanny]
-        nanny = Nanny.new(name: params[:family][:nanny])
+        nanny = Nanny.find_by(name: params[:family][:nanny])
+        unless nanny
+          nanny = Nanny.new(name: params[:family][:nanny])
+        end
       else
         valid << false
       end
