@@ -29,8 +29,9 @@ class Api::FamilyControllerTest < ActionController::TestCase
   test 'GET #index' do
     get :index, format: :json
     assert_response 200
-    r = JSON.parse(response.body, symbolize_names: true)[0]
-    ['id', 'name', 'phone_number', 'address', 'picture'].each do |item|
+    resp = JSON.parse(response.body, symbolize_names: true)
+    r = resp[:families][0]
+    ['name', 'phone_number', 'address', 'picture'].each do |item|
       assert_equal @family.send(item), r[item.to_sym]
     end
   end
@@ -39,7 +40,7 @@ class Api::FamilyControllerTest < ActionController::TestCase
     get :show, id: @family.name, format: :json
     assert_response 200
     r = JSON.parse(response.body, symbolize_names: true)
-    ['id', 'name', 'phone_number', 'address', 'picture'].each do |item|
+    ['name', 'phone_number', 'address', 'picture'].each do |item|
       assert_equal @family.send(item), r[item.to_sym]
     end
   end
@@ -99,30 +100,20 @@ class Api::FamilyControllerTest < ActionController::TestCase
 
   test 'PATCH #update works with valid attributes' do
     patch :update, id: @family.name, family: @f_attr, format: :json
-    assert_response 200
-    @family.reload
-    r = JSON.parse(response.body, symbolize_names: true)
-    ['id', 'name', 'phone_number', 'address', 'picture'].each do |item|
-      assert_equal @family.send(item), r[item.to_sym]
-    end
+    assert_response 201
   end
 
   test 'PATCH #update does not work with INvalid attributes' do
     attributes = { name: '', phone_number: '', address: '' }
     patch :update, id: @family.name, family: attributes, format: :json
     assert_response 422
-    @family.reload
-    r = JSON.parse(response.body, symbolize_names: true)
-    ['id', 'name', 'phone_number', 'address', 'picture'].each do |item|
-      assert_not_equal @family.send(item), r[item.to_sym]
-    end
   end
 
   test 'DELETE #destroy obliterates family object' do
     assert_difference('Family.count', -1) do
       delete :destroy, id: @family.name, format: :json
     end
-    assert_response 204
+    assert_response 200
     begin
       check = Family.find(id: @family.id)
     rescue
