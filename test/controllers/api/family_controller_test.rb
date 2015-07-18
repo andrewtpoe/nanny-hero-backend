@@ -8,7 +8,7 @@ class Api::FamilyControllerTest < ActionController::TestCase
       phone_number: "888-888-8888",
       address: "family's address",
       picture: "link to picture",
-      nanny: "Nancy",
+      nanny: "Thomas",
       nanny_id: nil,
       children: [
         {
@@ -46,7 +46,7 @@ class Api::FamilyControllerTest < ActionController::TestCase
 
   test 'GET #show does not render correct data without valid :name' do
     get :show, id: "boogy22", format: :json
-    assert_response 422
+    assert_response 404
   end
 
   test 'POST #create builds family record with valid attributes' do
@@ -90,7 +90,7 @@ class Api::FamilyControllerTest < ActionController::TestCase
     assert_response 201
   end
 
-  test 'POST #create does not work without nancy name' do
+  test 'POST #create does not work without nanny name' do
   end
 
 

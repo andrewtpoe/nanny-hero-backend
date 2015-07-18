@@ -1,15 +1,28 @@
-### current routes:
+### current urls available:
 
 ```
-          Prefix Verb   URI Pattern                    Controller#Action
-api_family_index GET    /api/family(.:format)          api/family#index
-                 POST   /api/family(.:format)          api/family#create
-  new_api_family GET    /api/family/new(.:format)      api/family#new
- edit_api_family GET    /api/family/:id/edit(.:format) api/family#edit
-      api_family GET    /api/family/:id(.:format)      api/family#show
-                 PATCH  /api/family/:id(.:format)      api/family#update
-                 PUT    /api/family/:id(.:format)      api/family#update
-                 DELETE /api/family/:id(.:format)      api/family#destroy
+Verb   URI Pattern                          Controller#Action
+
+GET    /api/family                          api/family#index
+* Returns an array of all family objects (see below for data structure)
+
+GET    /api/family/:name                    api/family#show
+* Will return the family object where the :name is an exact match to the family's name. Case sensitive. Will return 404 if no record exists.
+
+POST   /api/family/(family object)          api/family#create
+* Will create a new family record if all data present & valid. Will return 422 error if not.
+
+PATCH  /api/family/:name/(family object)    api/family#update
+* Will update all attributes sent if valid. Will return 422 if data is not valid or :name does not exist
+
+DELETE /api/family/:name                    api/family#destroy
+* Will delete family object with matching name, plus all of the families children.
+
+GET    /api/nanny/:name                     api/nanny#show
+* Will return a nanny object (see below for data structure) where the :name is an exact match. Case sensitive. Will return 404 if no nanny is found.
+
+DELETE /api/nanny/:name                     api/nanny#destroy
+* Will delete nanny object and all related families and their children. Use with caution!
 ```
 
 ### family object:
@@ -24,11 +37,12 @@ family = {
   children: [ child_object_1, child_object_2, child_object_3 ]
 }
 ```
-Required to create:
+MINIMUM REQUIRED TO CREATE NEW FAMILY RECORD:
 * name
 * phone_number
 * address
-* nanny_name
+* nanny
+* at least one valid child object in the array
 
 
 ### child object:
@@ -39,13 +53,13 @@ child = {
   age: child's age
   allergies: child's allergies
   fav_food: child's favorite food
-  interests: ['interest_1', 'interest_2', 'interest_3']
+  interests: "interest_1, interest_2, interest_3"
   bed_time: child's bed time
-  potty_trained: true or false
-  special_needs: true or false
+  potty_trained: yes/no
+  special_needs: yes/no
 }
 ```
-Required to create:
+MINIMUM REQUIRED TO CREATE NEW CHILD RECORD:
 * name
 
 
@@ -54,7 +68,7 @@ Required to create:
 ```
 nanny = {
   name: nanny's name
-  family_id: family_id associated with nanny
+  families: [family_object_1, family_object_2, family_object_3]
 }
 ```
-Currently created when family is made
+Nannies are currently created only when a family is stored.
