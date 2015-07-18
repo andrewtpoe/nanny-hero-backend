@@ -2,19 +2,14 @@ class Api::FamilyController < ApplicationController
 
   def index
     @families = Family.all
-    respond_to do |format|
-      format.json { render json: @families }
-    end
   end
 
   def show
     @family = get_family
-    respond_to do |format|
-      if @family
-        format.json { render json: @family }
-      else
-        format.json { render json: "", status: 404 }
-      end
+    if @family
+      render :show
+    else
+      render nothing: true, status: 404
     end
   end
 
@@ -53,40 +48,34 @@ class Api::FamilyController < ApplicationController
     else
       valid << false
     end
-    respond_to do |format|
-      if valid.include?(false)
-        format.json { render json: @family.errors, status: :unprocessable_entity }
-      else
-        nanny.save
-        @family.nanny = nanny
-        @family.save
-        valid_children.each do |child|
-          child.family = @family
-          child.save
-        end
-        nanny.save
-        format.json { render json: @family, status: :created }
+    if valid.include?(false)
+      render nothing: true, status: :unprocessable_entity
+    else
+      nanny.save
+      @family.nanny = nanny
+      @family.save
+      valid_children.each do |child|
+        child.family = @family
+        child.save
       end
+      nanny.save
+      render :show, status: :created
     end
   end
 
   def update
     @family = get_family
-    respond_to do |format|
-      if @family.update_attributes(family_params)
-        format.json { render json: @family }
-      else
-        format.json { render json: @family.errors, status: :unprocessable_entity }
-      end
+    if @family.update_attributes(family_params)
+      render nothing: true, status: 201
+    else
+      render nothing: true, status: 422
     end
   end
 
   def destroy
     @family = get_family
     @family.destroy
-    respond_to do |format|
-      format.json { render json: "", status: :no_content }
-    end
+    render nothing: true, status: 200
   end
 
   private

@@ -10,12 +10,19 @@ class Api::NannyController < ApplicationController
     end
   end
 
+  def show
+    @nanny = get_nanny
+    if @nanny
+      render :show
+    else
+      render nothing: true, status: 404
+    end
+  end
+
   def destroy
     @nanny = get_nanny
     @nanny.destroy
-    respond_to do |format|
-      format.json { render json: "", status: :no_content }
-    end
+    render nothing: true, status: 200
   end
 
   private
@@ -25,7 +32,7 @@ class Api::NannyController < ApplicationController
   end
 
   def get_nanny
-    Nanny.find(params[:id])
+    Nanny.find_by(name: params[:id])
   end
 
 end
