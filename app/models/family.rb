@@ -1,6 +1,6 @@
 class Family < ActiveRecord::Base
-  has_one :nanny
-  has_many :children
+  belongs_to :nanny
+  has_many :children, dependent: :destroy
 
-  validates :name, :phone_number, :address, presence: true
+  validates :name, :phone_number, :address, :nanny_id, presence: true
 end

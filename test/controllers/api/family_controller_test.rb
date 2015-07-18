@@ -2,13 +2,14 @@ require 'test_helper'
 
 class Api::FamilyControllerTest < ActionController::TestCase
   def setup
-    @family = families(:one)
+    @family = families(:poes)
     @f_attr = {
       name: "unique family name",
       phone_number: "888-888-8888",
       address: "family's address",
       picture: "link to picture",
       nanny: "Nancy",
+      nanny_id: nil,
       children: [
         {
           name: "Tommy",
@@ -22,22 +23,13 @@ class Api::FamilyControllerTest < ActionController::TestCase
         }
       ]
     }
-
+    @child = children(:one)
   end
 
   test 'GET #index' do
     get :index, format: :json
     assert_response 200
     r = JSON.parse(response.body, symbolize_names: true)[0]
-    ['id', 'name', 'phone_number', 'address', 'picture'].each do |item|
-      assert_equal @family.send(item), r[item.to_sym]
-    end
-  end
-
-  test 'GET #show renders correct data' do
-    get :show, id: @family.name, format: :json
-    assert_response 200
-    r = JSON.parse(response.body, symbolize_names: true)
     ['id', 'name', 'phone_number', 'address', 'picture'].each do |item|
       assert_equal @family.send(item), r[item.to_sym]
     end
@@ -50,6 +42,11 @@ class Api::FamilyControllerTest < ActionController::TestCase
     ['id', 'name', 'phone_number', 'address', 'picture'].each do |item|
       assert_equal @family.send(item), r[item.to_sym]
     end
+  end
+
+  test 'GET #show does not render correct data without valid :name' do
+    get :show, id: "boogy22", format: :json
+    assert_response 422
   end
 
   test 'POST #create builds family record with valid attributes' do
@@ -67,20 +64,35 @@ class Api::FamilyControllerTest < ActionController::TestCase
     assert_response 422
   end
 
-
-
-
   test 'POST #create creates the correct number of child records with valid attributes' do
+    assert_difference('Child.count', 1) do
+      post :create, family: @f_attr, format: :json
+    end
+    assert_response 201
   end
 
   test 'POST #create does not create child records with INvalid attributes' do
+    attributes = { name: '', phone_number: '', address: '' }
+    assert_no_difference('Family.count') do
+      post :create, family: attributes, format: :json
+    end
+    assert_response 422
   end
 
-  test 'POST #create creates nancy record associated with family' do
+
+
+
+
+  test 'POST #create creates nanny record associated with family' do
+    assert_difference('Nanny.count', 1) do
+      post :create, family: @f_attr, format: :json
+    end
+    assert_response 201
   end
 
   test 'POST #create does not work without nancy name' do
   end
+
 
 
 
@@ -117,6 +129,14 @@ class Api::FamilyControllerTest < ActionController::TestCase
       check = nil
     end
     refute check
+  end
+
+  test 'DELETE #destroy family also deletes related children' do
+    @child.family = @family
+    @child.save
+    id = @child.id
+    @family.destroy
+    refute Child.find_by(id: id)
   end
 
 end
