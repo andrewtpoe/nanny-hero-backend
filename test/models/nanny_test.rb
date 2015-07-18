@@ -2,7 +2,7 @@ require 'test_helper'
 
 class NannyTest < ActiveSupport::TestCase
   def setup
-    @nanny = nannies(:one)
+    @nanny = nannies(:nancy)
   end
 
   test "fixture is valid" do

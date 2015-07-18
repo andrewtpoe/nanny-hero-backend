@@ -2,11 +2,11 @@ require 'test_helper'
 
 class Api::ChildControllerTest < ActionController::TestCase
   def setup
-    @family = families(:one)
+    @family = families(:poes)
     @child = children(:one)
     @c_attr = {
       name: "Tommy",
-      age: 10,
+      age: "10",
       allergies: "none",
       fav_food: "Mac 'n Cheese",
       interests: "Child interests",
@@ -16,14 +16,27 @@ class Api::ChildControllerTest < ActionController::TestCase
     }
   end
 
-  test 'POST #create builds a new child objext' do
+  test 'POST #create builds a new child object' do
     assert_difference('Child.count', 1) do
       post :create, family: @family, child: @c_attr, format: :json
+      r = JSON.parse(response.body, symbolize_names: true)
+      [:name, :age, :allergies].each do |item|
+        assert_equal @c_attr[item], r[item.to_sym]
+      end
     end
   end
 
-  test 'DELETE #destroy removes a child record' do
+  test 'DELETE #destroy obliterates a child record' do
+    assert_difference('Child.count', -1) do
+      delete :destroy, id: @child, format: :json
+    end
+    assert_response 204
+    begin
+      check = Child.find(@child.id)
+    rescue
+      check = nil
+    end
+    refute check
   end
-
 
 end

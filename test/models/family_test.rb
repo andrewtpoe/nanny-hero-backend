@@ -2,7 +2,7 @@ require 'test_helper'
 
 class FamilyTest < ActiveSupport::TestCase
   def setup
-    @family = families(:one)
+    @family = families(:poes)
   end
 
   test "fixture is valid" do
