@@ -12,6 +12,7 @@ class Api::FamilyControllerTest < ActionController::TestCase
       nanny_id: nil,
       children: [
         {
+          child_id: 980190962,
           name: "Tommy",
           age: 10,
           allergies: "none",
@@ -80,16 +81,15 @@ class Api::FamilyControllerTest < ActionController::TestCase
     assert_response 422
   end
 
-
-
-
-
   test 'POST #create creates nanny record associated with family' do
     assert_difference('Nanny.count', 1) do
       post :create, family: @f_attr, format: :json
     end
     assert_response 201
   end
+
+
+
 
   test 'POST #create does not work without nanny name' do
   end
@@ -100,7 +100,27 @@ class Api::FamilyControllerTest < ActionController::TestCase
 
   test 'PATCH #update works with valid attributes' do
     patch :update, id: @family.name, family: @f_attr, format: :json
+    fam = Family.find_by(name: @f_attr[:name])
     assert_response 201
+  end
+
+  test 'PATCH #update can update children of family' do
+    child = @family.children[0]
+    child_id = child.id
+    child_name = child.name
+    patch :update, id: @family.name, family: @f_attr, format: :json
+    fam = Family.find_by(name: @f_attr[:name])
+    kid = Child.find(child_id)
+    refute child_name == kid.name
+    assert_equal @f_attr[:children][0][:name], kid.name
+  end
+
+  test 'PATCH #update can change the families nanny' do
+    nanny_id = @family.nanny_id
+    patch :update, id: @family.name, family: @f_attr, format: :json
+    @family.reload
+    refute nanny_id == @family.nanny_id
+    assert_equal @family.nanny.name, "Thomas"
   end
 
   test 'PATCH #update does not work with INvalid attributes' do
