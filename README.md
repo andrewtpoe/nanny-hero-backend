@@ -49,6 +49,7 @@ MINIMUM REQUIRED TO CREATE NEW FAMILY RECORD:
 
 ```
 child = {
+  child_id: child's id (will be sent to you when GET request is made, must be returned to update children)
   name: child's name
   age: child's age
   allergies: child's allergies
