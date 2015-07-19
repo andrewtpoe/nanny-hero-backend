@@ -58,7 +58,6 @@ class Api::FamilyController < ApplicationController
         child.family = @family
         child.save
       end
-      nanny.save
       render :show, status: :created
     end
   end
@@ -66,6 +65,19 @@ class Api::FamilyController < ApplicationController
   def update
     @family = get_family
     if @family.update_attributes(family_params)
+      params[:family][:children].each do |child|
+        kid = Child.find(child[:child_id])
+        kid.update_attributes(child_params(child))
+      end
+      unless params[:family][:nanny] == @family.nanny.name
+        nanny = Nanny.find_by(name: params[:family][:nanny])
+        unless nanny
+          nanny = Nanny.new(name: params[:family][:nanny])
+        end
+        nanny.save
+        @family.nanny = nanny
+        @family.save
+      end
       render nothing: true, status: 201
     else
       render nothing: true, status: 422

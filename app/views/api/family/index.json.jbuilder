@@ -5,6 +5,7 @@ json.families @families do |family|
   json.picture family.picture
   json.nanny family.nanny.name
   json.children family.children do |child|
+    json.child_id child.id
     json.name child.name
     json.age child.age
     json.allergies child.allergies
