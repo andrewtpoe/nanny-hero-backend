@@ -25,8 +25,7 @@ class Api::NannyControllerTest < ActionController::TestCase
   test 'POST #create builds a new nanny object' do
     assert_difference('Nanny.count', 1) do
       post :create, nanny: @n_attr, format: :json
-      r = JSON.parse(response.body, symbolize_names: true)
-      assert_equal @n_attr[:name], r[:name]
+      assert_response 201
     end
   end
 

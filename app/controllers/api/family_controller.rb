@@ -58,7 +58,7 @@ class Api::FamilyController < ApplicationController
         child.family = @family
         child.save
       end
-      render :show, status: :created
+      render nothing: true, status: :created
     end
   end
 

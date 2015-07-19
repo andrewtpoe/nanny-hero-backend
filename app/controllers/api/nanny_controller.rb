@@ -1,12 +1,11 @@
 class Api::NannyController < ApplicationController
+
   def create
     @nanny = Nanny.new(nanny_params)
-    respond_to do |format|
-      if @nanny.save
-        format.json { render json: @nanny, status: :created }
-      else
-        format.json { render json: @nanny.errors, status: :unprocessable_entity }
-      end
+    if @nanny.save
+      render nothing: true, status: :created
+    else
+      render nothing: true, status: :unprocessable_entity
     end
   end
 

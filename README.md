@@ -1,4 +1,4 @@
-### current urls available:
+### current API urls available:
 
 ```
 Verb   URI Pattern                          Controller#Action
@@ -17,6 +17,12 @@ PATCH  /api/family/:name/(family object)    api/family#update
 
 DELETE /api/family/:name                    api/family#destroy
 * Will delete family object with matching name, plus all of the families children.
+
+POST   /api/family/:family_name/child/(child object)    api/child#create
+* Will create a new child and relate it to the family name provided.
+
+DELETE /api/family/:family_name/child/:id   api/child#destroy
+* Requires the unique ID of the child (returned in show family query above). Will delete that single child from the records.
 
 GET    /api/nanny/:name                     api/nanny#show
 * Will return a nanny object (see below for data structure) where the :name is an exact match. Case sensitive. Will return 404 if no nanny is found.
