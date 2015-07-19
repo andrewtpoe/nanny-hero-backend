@@ -18,17 +18,14 @@ class Api::ChildControllerTest < ActionController::TestCase
 
   test 'POST #create builds a new child object' do
     assert_difference('Child.count', 1) do
-      post :create, family: @family, child: @c_attr, format: :json
-      r = JSON.parse(response.body, symbolize_names: true)
-      [:name, :age, :allergies].each do |item|
-        assert_equal @c_attr[item], r[item.to_sym]
-      end
+      post :create, family_id: @family.name, child: @c_attr, format: :json
+      assert_response 201
     end
   end
 
   test 'DELETE #destroy obliterates a child record' do
     assert_difference('Child.count', -1) do
-      delete :destroy, id: @child, format: :json
+      delete :destroy, family_id: @child.family, id: @child, format: :json
     end
     assert_response 204
     begin
